@@ -1,17 +1,23 @@
 import React, { Component } from 'react';
 import './App.scss';
-import Car from './Car/Car'
+import Car from './Car/Car';
+import ErrorBoundary from './ErrorBoundary/ErrorBoundary';
+import Counter from './Counter/Counter';
 
 class App extends Component {
 
-  state = {
-    cars: [
-      {name: 'Ford', year: 2018},
-      {name: 'Audi', year: 2016},
-      {name: 'Mazda', year: 2010}
-    ],
-    pageTitle: 'React components',
-    showCars: true
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      cars: [
+        {name: 'Ford', year: 2018},
+        // {name: 'Audi', year: 2016},
+        // {name: 'Mazda', year: 2010}
+      ],
+      pageTitle: 'React components',
+      showCars: true
+    };
   }
 
   toggleCarsHandler = () => {
@@ -39,29 +45,38 @@ class App extends Component {
     const divStyle = {
       textAlign: 'center'
     }
+    const marginTopStyle = {
+      marginTop: '20px'
+    };
 
     let cars = null
 
     if (this.state.showCars) {
       cars = this.state.cars.map((car, index) => {
         return (
-          <Car
-            key={index}
-            name={car.name}
-            year={car.year}
-            onDelete={this.deleteHandler.bind(this, index)}
-            onChangeName={event => this.onChangeName(event.target.value, index)}
-          />
+          <ErrorBoundary key={index}>
+            <Car
+              name={car.name}
+              year={car.year}
+              onDelete={this.deleteHandler.bind(this, index)}
+              onChangeName={event => this.onChangeName(event.target.value, index)}
+            />
+          </ErrorBoundary>
         )
       })
     }
 
     return (
       <div style={divStyle}>
-        <h1>{this.state.pageTitle}</h1>
+        {/*<h1>{this.state.pageTitle}</h1>*/}
+        <h1>{this.props.title}</h1>
 
+        <Counter />
+
+        <hr/>
         <button
           onClick={this.toggleCarsHandler}
+          style={marginTopStyle}
         >Toggle cars</button>
 
         <div style={{
