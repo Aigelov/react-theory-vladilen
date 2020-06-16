@@ -4,19 +4,22 @@ import Car from './Car/Car';
 import ErrorBoundary from './ErrorBoundary/ErrorBoundary';
 import Counter from './Counter/Counter';
 
+export const ClickedContext = React.createContext(false);
+
 class App extends Component {
 
   constructor(props) {
     super(props);
 
     this.state = {
+      clicked: false,
       cars: [
         {name: 'Ford', year: 2018},
-        // {name: 'Audi', year: 2016},
-        // {name: 'Mazda', year: 2010}
+        {name: 'Audi', year: 2016},
+        {name: 'Mazda', year: 2010}
       ],
       pageTitle: 'React components',
-      showCars: true
+      showCars: false
     };
   }
 
@@ -58,6 +61,7 @@ class App extends Component {
             <Car
               name={car.name}
               year={car.year}
+              index={index}
               onDelete={this.deleteHandler.bind(this, index)}
               onChangeName={event => this.onChangeName(event.target.value, index)}
             />
@@ -71,13 +75,17 @@ class App extends Component {
         {/*<h1>{this.state.pageTitle}</h1>*/}
         <h1>{this.props.title}</h1>
 
-        <Counter />
+        <ClickedContext.Provider value={this.state.clicked}>
+          <Counter />
+        </ClickedContext.Provider>
 
         <hr/>
         <button
           onClick={this.toggleCarsHandler}
           style={marginTopStyle}
         >Toggle cars</button>
+
+        <button onClick={() => this.setState({clicked: !this.state.clicked})}>Change clicked</button>
 
         <div style={{
           width: 400,
